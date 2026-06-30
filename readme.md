@@ -20,5 +20,5 @@ cmake --build build/{debug|release} --target flash
 
 ## To-Do
 
-* [ ] **Language Server:** Setup a proper `.clangd` file for setup embedded system development
+* [x] **Language Server:** Setup a proper `.clangd` file for setup embedded system development
 * [x] **Build Automation:** Separate the structure into proper `debug` and `release` directories.
