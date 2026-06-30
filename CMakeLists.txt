@@ -32,3 +32,25 @@ target_link_libraries(pico2_blinky pico_stdlib)
 
 # Generate standard output files including the .uf2 image
 #pico_add_extra_outputs(pico2_blinky 
+
+
+# cmake --build build/debug --target flash
+add_custom_target(flash
+    COMMAND probe-rs download --chip RP235x --protocol swd $<TARGET_FILE:${PROJECT_NAME}>
+    COMMAND probe-rs reset --chip RP235x --protocol swd
+    DEPENDS ${PROJECT_NAME}
+    COMMENT "Flashing target MCU using probe-rs..."
+)
+
+# Force a single compile_commands.json in the main build/ folder
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+    # Ensure the parent build/ directory exists
+    file(MAKE_DIRECTORY "${CMAKE_SOURCE_DIR}/build")
+
+    add_custom_target(shared_compile_commands ALL
+        COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_BINARY_DIR}/compile_commands.json"
+            "${CMAKE_SOURCE_DIR}/build/compile_commands.json"
+        COMMENT "Updating the single shared compile_commands.json in build/"
+    )
+endif()
